@@ -43,6 +43,14 @@ networks:
   enable-visualizer: true
   delete-excess-items: false
 
+reactor:
+  nuclear-reactor:
+    power-buffer: 16384
+    power-per-second: 500
+  nether-star-reactor:
+    power-buffer: 32768
+    power-per-second: 1024
+
 talismans:
   use-actionbar: true
 
