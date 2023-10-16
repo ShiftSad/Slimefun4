@@ -2518,12 +2518,12 @@ public final class SlimefunItemSetup {
             
             @Override
             public int getEnergyProduction() {
-                return 250;
+                return Slimefun.getCfg().getInt("reactor.nuclear-reactor.power-per-second");
             }
 
             @Override
             public int getCapacity() {
-                return 16384;
+                return Slimefun.getCfg().getInt("reactor.nuclear-reactor.power-buffer");
             }
             
         }.register(plugin);
@@ -2533,12 +2533,12 @@ public final class SlimefunItemSetup {
 
             @Override
             public int getEnergyProduction() {
-                return 512;
+                return Slimefun.getCfg().getInt("reactor.nuclear-reactor.power-per-second");
             }
 
             @Override
             public int getCapacity() {
-                return 32768;
+                return Slimefun.getCfg().getInt("reactor.nether-star-reactor.power-buffer");
             }
 
         }.register(plugin);
