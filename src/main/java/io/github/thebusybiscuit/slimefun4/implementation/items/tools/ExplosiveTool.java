@@ -68,6 +68,13 @@ public class ExplosiveTool extends SimpleSlimefunItem<ToolUseHandler> implements
                 SoundEffect.EXPLOSIVE_TOOL_EXPLODE_SOUND.playAt(b);
 
                 List<Block> blocks = findBlocks(b);
+
+                // Ignore if the block is an elevator plate, since it dupes.
+                SlimefunItem sfItem = BlockStorage.check(b);
+                if (sfItem.getId().contains("ELEVATOR_PLATE")) {
+                    return;
+                }
+
                 breakBlocks(e, p, tool, b, blocks, drops);
             }
         };
@@ -85,7 +92,6 @@ public class ExplosiveTool extends SimpleSlimefunItem<ToolUseHandler> implements
                 for (Block block : blockExplodeEvent.blockList()) {
                     if (canBreak(p, block)) {
                         if (Slimefun.getIntegrations().isCustomBlock(block)) {
-                            drops.addAll(CustomBlock.byAlreadyPlaced(block).getLoot());
                             CustomBlock.remove(block.getLocation());
                         }
                         blocksToDestroy.add(block);
@@ -97,7 +103,6 @@ public class ExplosiveTool extends SimpleSlimefunItem<ToolUseHandler> implements
                 if (canBreak(p, block)) {
                     if (Slimefun.getIntegrations().isCustomBlock(block)) {
                         drops.addAll(CustomBlock.byAlreadyPlaced(block).getLoot());
-                        CustomBlock.remove(block.getLocation());
                     }
                     blocksToDestroy.add(block);
                 }
@@ -140,15 +145,14 @@ public class ExplosiveTool extends SimpleSlimefunItem<ToolUseHandler> implements
     }
 
     protected boolean canBreak(@Nonnull Player p, @Nonnull Block b) {
-        if (b.isEmpty() || b.isLiquid()) {
+        if (b.isEmpty() || b.isLiquid())
             return false;
-        } else if (SlimefunTag.UNBREAKABLE_MATERIALS.isTagged(b.getType())) {
+        if (SlimefunTag.UNBREAKABLE_MATERIALS.isTagged(b.getType()))
             return false;
-        } else if (!b.getWorld().getWorldBorder().isInside(b.getLocation())) {
+        if (!b.getWorld().getWorldBorder().isInside(b.getLocation()))
             return false;
-        } else {
-            return Slimefun.getProtectionManager().hasPermission(p, b.getLocation(), Interaction.BREAK_BLOCK);
-        }
+
+        return Slimefun.getProtectionManager().hasPermission(p, b.getLocation(), Interaction.BREAK_BLOCK);
     }
 
     @ParametersAreNonnullByDefault
@@ -176,12 +180,8 @@ public class ExplosiveTool extends SimpleSlimefunItem<ToolUseHandler> implements
             // Make sure the event wasn't cancelled by the BlockBreakHandler.
             if (!dummyEvent.isCancelled()) {
                 drops.addAll(sfItem.getDrops(p));
-                b.setType(Material.AIR);
-                BlockStorage.clearBlockInfo(b);
             }
-        } else {
-            b.breakNaturally(item);
-        }
+        } else b.breakNaturally(item);
 
         damageItem(p, item);
     }

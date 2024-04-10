@@ -124,11 +124,6 @@ public class BlockListener implements Listener {
                     if (Slimefun.getBlockDataService().isTileEntity(block.getType())) {
                         Slimefun.getBlockDataService().setBlockData(block, sfItem.getId());
                     }
-
-                    // Fix tractors from Vehicles plugin
-                    if (Bukkit.getServer().getPluginManager().isPluginEnabled("Vehicles") && e.getPlayer().isInsideVehicle())
-                        return;
-
                     BlockStorage.addBlockInfo(e.getBlock(), "id", sfItem.getId(), true);
                     sfItem.callItemHandler(BlockPlaceHandler.class, handler -> handler.onPlayerPlace(e));
                 }
